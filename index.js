@@ -1,6 +1,7 @@
 const { prefix, token } = require("./config.json");
+const { fetch } = require('fetch-nodejs')
 
-const { Client, Intents, Collection, MessageEmbed} = require('discord.js');
+const { Client, Intents, Collection, MessageEmbed, mess} = require('discord.js');
 const bot = new Client({ 
     intents: [
         Intents.FLAGS.GUILDS, 
@@ -17,7 +18,8 @@ const port = 3000;
 
 const newEmbed = new MessageEmbed()
 .setColor('#2ab8a0')
-.setDescription('nyaa~')
+.setDescription('uwu')
+
 
 bot.commands = new Collection();
 
@@ -86,8 +88,21 @@ bot.on("messageCreate", async message => {
     let cmd = messageArray[0];
     let args = messageArray.slice(1);
 
+
     //Check for prefix
     if(!cmd.startsWith(prefix)) return;
+
+    if(cmd.startsWith(prefix) && message.content.includes('sauce')) {
+        fetch('https://yande.re/post.json?limit=1000')
+.then((response) => response.json())
+.then((data) => {
+  console.log(data[Math.floor((Math.random() * 1000) + 1)].jpeg_url)
+  newEmbed.setImage(data[Math.floor((Math.random() * 1000) + 1)].jpeg_url)
+  message.reply({embeds: [newEmbed]})
+})
+
+        
+    }
 
     //Get the command from the commands collection and then if the command is found run the command file
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
